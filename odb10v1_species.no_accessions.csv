@@ -1,0 +1,124 @@
+ncbi-tax-id,orthodb-organism-id,scientific-name,genome-accession,num-clustered-genes,num-orthogroups,clustered-or-mapped
+4100,4100_0,Nicotiana benthamiana,,50376.0,101779.0,C
+4565,4565_0,Triticum aestivum,https://urgi.versailles.inra.fr/download/iwgsc/IWGSC_RefSeq_Annotations/v1.0/iwgsc_refseqv1.0_LowConf_PROTEIN_2017Mar13.fa.zip,103172.0,67875.0,C
+5656,5656_1,Crithidia fasciculata,,9195.0,30422.0,C
+5663,5663_1,Leishmania enriettii,,8124.0,36596.0,C
+5684,5684_1,Leptomonas seymouri,,8184.0,29862.0,C
+5689,5689_1,Leishmania tarentolae,,8069.0,36454.0,C
+5705,5705_1,Endotrypanum monterogeii,,7957.0,27118.0,C
+5763,5763_1,Naegleria fowleri,,9976.0,14447.0,C
+5823,5823_1,Plasmodium berghei ANKA,,4916.0,32090.0,C
+5849,5849_1,Plasmodium gallinaceum,,5083.0,27691.0,C
+5851,5851_1,Plasmodium knowlesi strain H,,5236.0,33249.0,C
+5854,5854_2,Plasmodium reichenowi,,5394.0,34159.0,C
+5855,5855_1,Plasmodium vivax,,6089.0,36303.0,C
+5858,5858_1,Plasmodium malariae,,5648.0,33124.0,C
+6832,6832_0,Tigriopus californicus,,12004.0,30885.0,C
+6945,6945_0,Ixodes scapularis,,13862.0,38182.0,C
+6973,6973_0,Blattella germanica,,25472.0,58375.0,C
+7004,7004_0,Locusta migratoria,,13819.0,42087.0,C
+7029,7029_0,Acyrthosiphon pisum,,29387.0,72586.0,C
+7130,7130_0,Manduca sexta,,14112.0,67089.0,C
+7159,7159_0,Aedes aegypti,,14069.0,85903.0,C
+7160,7160_0,Aedes albopictus,,16108.0,85563.0,C
+7165,7165_0,Anopheles gambiae,,12458.0,95469.0,C
+7167,7167_0,Anopheles albimanus,,10881.0,92552.0,C
+7168,7168_0,Anopheles dirus,,11831.0,98763.0,C
+7176,7176_0,Culex quinquefasciatus,,16957.0,92751.0,C
+7200,7200_0,Lutzomyia longipalpis,,9483.0,55928.0,C
+7217,7217_0,Drosophila ananassae,,13760.0,107298.0,C
+7220,7220_0,Drosophila erecta,,13330.0,107815.0,C
+7222,7222_0,Drosophila grimshawi,,13337.0,99342.0,C
+7227,7227_0,Drosophila melanogaster,dmel_r6.19,13213.0,105737.0,C
+7230,7230_0,Drosophila mojavensis,,12906.0,102724.0,C
+7237,7237_0,Drosophila pseudoobscura,,13639.0,105206.0,C
+7244,7244_0,Drosophila virilis,,13065.0,103275.0,C
+7245,7245_0,Drosophila yakuba,,14273.0,108930.0,C
+7370,7370_0,Musca domestica,,13693.0,75416.0,C
+7394,7394_0,Glossina morsitans,,11414.0,79969.0,C
+7395,7395_0,Glossina austeni,,15755.0,109632.0,C
+7397,7397_0,Glossina palpalis,,15704.0,106430.0,C
+7536,7536_0,Oncopeltus fasciatus,,15516.0,59560.0,C
+13037,13037_0,Danaus plexippus,,13519.0,82281.0,C
+13249,13249_0,Rhodnius prolixus,,12203.0,49904.0,C
+27996,27996_1,Cytauxzoon felis,,3346.0,20314.0,C
+29031,29031_0,Phlebotomus papatasi,,10502.0,61711.0,C
+30069,30069_0,Anopheles stephensi,,11864.0,99779.0,C
+31271,31271_1,Plasmodium chabaudi chabaudi,,5077.0,32628.0,C
+33119,33119_0,Petunia axillaris,,30864.0,71951.0,C
+34740,34740_0,Heliconius melpomene,,16402.0,86801.0,C
+35525,35525_0,Daphnia magna,,19697.0,40399.0,C
+35570,35570_0,Stomoxys calcitrans,,13374.0,74825.0,C
+36329,36329_1,Plasmodium falciparum 3D7,,5329.0,34150.0,C
+37001,37001_0,Glossina brevipalpis,,11992.0,82915.0,C
+38123,38123_0,Pachypsylla venusta,,11803.0,50598.0,C
+39758,39758_0,Mayetiola destructor,,13330.0,67412.0,C
+40932,40932_0,Rhopalosiphum padi,,18958.0,67270.0,C
+41427,41427_0,Anopheles atroparvus,,12356.0,101497.0,C
+41668,41668_1,Entamoeba moshkovskii,,10667.0,16475.0,C
+42890,42890_1,Sarcocystis neurona,,4972.0,26890.0,C
+43041,43041_0,Anopheles christyi,,10287.0,88431.0,C
+43151,43151_0,Anopheles darlingi,,10129.0,83712.0,C
+45779,45779_0,Papilio glaucus,,14151.0,80176.0,C
+51315,51315_1,Eimeria necatrix,,6912.0,35961.0,C
+52283,52283_0,Sarcoptes scabiei,,8146.0,32102.0,C
+52612,52612_0,Calopteryx splendens,,17757.0,53412.0,C
+54969,54969_0,Polypedilum nubifer,,14706.0,81986.0,C
+56086,56086_0,Gerris buenoi,,17200.0,57581.0,C
+62297,62297_1,Leishmania turanica,,8294.0,37866.0,C
+62324,62324_0,Anopheles funestus,,12120.0,100292.0,C
+64793,64793_0,Wasmannia auropunctata,,13034.0,83542.0,C
+69004,69004_0,Anopheles farauti,,11873.0,99843.0,C
+72036,72036_0,Lepeophtheirus salmonis,,10500.0,27910.0,C
+74869,74869_0,Anopheles maculatus,,13584.0,103173.0,C
+74873,74873_0,Anopheles sinensis,,11740.0,95217.0,C
+84963,84963_1,Eimeria falciformis,,5360.0,29545.0,C
+85056,85056_1,Trypanosoma cruzi marinkellei,,8935.0,25813.0,C
+85471,85471_1,Plasmodium relictum,,4980.0,27757.0,C
+88501,88501_0,Lasioglossum albipes,,12123.0,81632.0,C
+93721,93721_0,Myzus cerasi,,21413.0,71715.0,C
+112268,112268_0,Anopheles minimus,,11650.0,98837.0,C
+113334,113334_0,Melitaea cinxia,,13736.0,81033.0,C
+121225,121225_0,Pediculus humanus,,9546.0,38024.0,C
+121845,121845_0,Diaphorina citri,,16259.0,54620.0,C
+123851,123851_0,Ladona fulva,,17229.0,52506.0,C
+126957,126957_0,Strigamia maritima,,12124.0,21853.0,C
+132113,132113_0,Bombus impatiens,,13851.0,89243.0,C
+133901,133901_0,Frankliniella occidentalis,,14654.0,46448.0,C
+139723,139723_0,Anopheles culicifacies,,13183.0,108049.0,C
+157538,157538_1,Leptomonas pyrrhocoris,,9249.0,30788.0,C
+166423,166423_0,Melipona quadrifasciata,,11364.0,82993.0,C
+168631,168631_0,Chilo suppressalis,,9725.0,48254.0,C
+197043,197043_0,Homalodisca vitripennis,,25794.0,71406.0,C
+199890,199890_0,Anopheles epiroticus,,11683.0,98159.0,C
+200316,200316_0,Nicotiana obtusifolia,,21932.0,86755.0,C
+246812,246812_0,Heliconius erato lativitta,,12543.0,71569.0,C
+286306,286306_0,Cardiocondyla obscurior,,11964.0,82056.0,C
+307491,307491_0,Aphis glycines,,16429.0,62387.0,C
+315563,315563_0,Belgica antarctica,,11640.0,68176.0,C
+319348,319348_0,Polypedilum vanderplanki,,16036.0,83002.0,C
+326594,326594_0,Ceratosolen solmsi marchali,,9484.0,54067.0,C
+347515,347515_1,Leishmania major strain Friedlin,,8344.0,36641.0,C
+352914,352914_1,Plasmodium yoelii yoelii 17XNL,,5464.0,32234.0,C
+353153,353153_1,Trypanosoma cruzi strain CL Brener,,1806.0,4041.0,C
+378494,378494_0,Galloisiana yuasai,,25446.0,56474.0,C
+412133,412133_1,Trichomonas vaginalis G3,,27200.0,12645.0,C
+438502,438502_0,Campodea augens,,20428.0,37723.0,C
+438503,438503_0,Catajapyx aquilonaris,,10544.0,29153.0,C
+535359,535359_0,Macrocentrus cingulum,,11208.0,53318.0,C
+720590,720590_1,Plasmodium sp. DRC-Itaito,,5189.0,32579.0,C
+864141,864141_1,Plasmodium ovale curtisi,,6782.0,38824.0,C
+880535,880535_1,Plasmodium sp. gorilla clade G2,,5291.0,33264.0,C
+880536,880536_1,Plasmodium sp. gorilla clade G3,,5084.0,32486.0,C
+929439,929439_1,Leishmania mexicana MHOM/GT/2001/U1103,,8176.0,36516.0,C
+1049336,1049336_0,Ephemera danica,,16469.0,49685.0,C
+1055687,1055687_1,Trypanosoma vivax Y486,,10324.0,34246.0,C
+1068625,1068625_1,Trypanosoma congolense IL3000,,10897.0,32577.0,C
+1155016,1155016_0,Mengenilla moldrzyki,,14641.0,52742.0,C
+1169474,1169474_1,Chromera velia CCMP2878,,17221.0,22730.0,C
+1169540,1169540_1,Vitrella brassicaformis CCMP3155,,14514.0,22276.0,C
+1206056,1206056_1,Leishmania aethiopica L147,,8408.0,38115.0,C
+1218281,1218281_0,Limnephilus lunatus,,11969.0,46783.0,C
+1274352,1274352_1,Plasmodium cynomolgi strain M,,6226.0,35967.0,C
+1303197,1303197_1,Leishmania sp. MAR LEM2494,,8096.0,36641.0,C
+1507135,1507135_0,Euglossa dilemma,,10791.0,81978.0,C
