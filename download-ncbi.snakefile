@@ -17,7 +17,7 @@ import pandas as pd
 #6.  total count of the OGs it participates
 #7.  mapping type, clustered(C) or mapped(M)
 
-header=["ncbi-tax-id", "orthodb-organism-id", "scientific-name", "genome-accession", "num-clustered-genes", "num-orthogroups", "clustered-or-mapped"]
+header=["ncbi-taxid", "orthodb-organism-id", "scientific-name", "genome-accession", "num-clustered-genes", "num-orthogroups", "clustered-or-mapped"]
 odb_species = pd.read_csv("orthodb/odb10v1_species.tab.gz", sep="\t", names=header)
 accessions=odb_species["genome-accession"].dropna().astype(str).tolist()
 
@@ -28,9 +28,9 @@ downloadable_accessions = [g for g in accessions if g.startswith("GC")] # 15124 
 # Can parse the json output with jq to get just the accession(s):
 # scripts/ncbi-datasets assembly-descriptors tax-id 5656 --limit ALL | jq '.datasets[].assembly_accession' -r
 no_gc_accession = odb_species[~odb_species[ "genome-accession"].astype(str).str.startswith('GC', na=False)] #123 weird ones
-#taxid2accession = no_gc_accession.set_index('ncbi-tax-id').to_dict()['genome-accession']
-taxid2sciname = no_gc_accession.set_index('ncbi-tax-id').to_dict()['scientific-name']
-really_no_genome_list = []
+#taxid2accession = no_gc_accession.set_index('ncbi-taxid').to_dict()['genome-accession']
+taxid2sciname = no_gc_accession.set_index('ncbi-taxid').to_dict()['scientific-name']
+#really_no_genome_list = []
 
 #def try_to_lookup_accession(taxid, sciname, refseq=False):
 ## this lookup works, but only prints accession to command line, does not store to a variable we can use.

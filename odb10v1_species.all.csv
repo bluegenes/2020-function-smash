@@ -1,4 +1,4 @@
-ncbi-tax-id,orthodb-organism-id,scientific-name,genome-accession,num-clustered-genes,num-orthogroups,clustered-or-mapped
+ncbi-taxid,orthodb-organism-id,scientific-name,genome-accession,num-clustered-genes,num-orthogroups,clustered-or-mapped
 9,9_0,Buchnera aphidicola,GCF_900128725.1,362.0,2125.0,C
 48,48_0,Archangium gephyra,GCF_001027285.1,8896.0,22879.0,C
 52,52_0,Chondromyces crocatus,GCF_001189295.1,7342.0,20099.0,C
