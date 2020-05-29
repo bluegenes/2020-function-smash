@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 import argparse
 import pandas as pd
 import taxonomy
@@ -74,11 +75,8 @@ def get_row_taxpath(row, taxo, ranks, taxid_col="ncbi-taxid"):
     lineage = taxo.lineage(current_taxid)
     valid_ranks = {}
 
-    try:
-        if row["rank"] == "strain" and "strain" in ranks:
-            valid_ranks["strain"] = current_taxid
-    except:
-        import pdb;pdb.set_trace()
+    if row["rank"] == "strain" and "strain" in ranks:
+        valid_ranks["strain"] = current_taxid
 
     for l in lineage:
         current_rank = taxo.rank(l)
@@ -89,24 +87,43 @@ def get_row_taxpath(row, taxo, ranks, taxid_col="ncbi-taxid"):
     final_taxpath = []
     for rank in ranks:
         if rank in valid_ranks:
-            try:
-                name = taxo.name(valid_ranks[rank])
-                lp = sourmash.lca.LineagePair(rank, name)
-                final_lineage.append(lp)
-            except:
-                import pdb;pdb.set_trace()
+            name = taxo.name(valid_ranks[rank])
+            lp = sourmash.lca.LineagePair(rank, name)
+            final_lineage.append(lp)
+            if rank == "superkingdom":
+                row["charcoal_lineage"] = f"d__{name}"
             final_taxpath.append(valid_ranks[rank])
         else:
             final_taxpath.append("")
+            lp = sourmash.lca.LineagePair(rank, "")
+            final_lineage.append(lp)
 
     row["taxpath"] = "|".join(final_taxpath)
-    row["lineage"] = sourmash.lca.display_lineage(final_lineage)
+    row["lineage"] = ",".join(sourmash.lca.zip_lineage(final_lineage,include_strain=True,truncate_empty=True))
+    return row
+
+def find_filename(row, glob_dir, glob_col, second_col, full_paths=False):
+    identifier = row[glob_col]
+    filepattern = os.path.join(glob_dir, f"*{identifier}*")
+    found_files = glob.glob(filepattern)
+    if len(found_files) >= 1:
+        if full_paths:
+            row["filename"] = os.path.abspath(found_files[0])
+        else:
+            row["filename"] = os.path.basename(found_files[0])
+        if len(found_files) > 1:
+            fileinfo = "\n".join(found_files)
+            sys.stderr.write(f"Warning: {identifier} found more than one match in directory {glob_dir}. " \
+                             f"Only first match returned. All matches are:\n {fileinfo}\n")
+    elif len(found_files) == 0:
+        row["filename"] = ""
+        sys.stderr.write(f"Warning: {identifier} found no matches in directory {glob_dir}.\n")
     return row
 
 def main(args):
     taxdump_dir= args.taxdump_dir
     ranks=args.ranks.split("|")
-    taxid_col=args.identifier_column
+    taxid_col=args.taxid_column
 
     # load local taxdump files names.dmp and nodes.dmp into taxonomy
     taxo = taxonomy.Taxonomy.from_ncbi(os.path.join(taxdump_dir, "nodes.dmp"), os.path.join(taxdump_dir, "names.dmp"))
@@ -116,6 +133,14 @@ def main(args):
     queryDF= pd.read_csv(args.query_csv)
     # find lineage from taxid
     queryDF = queryDF.apply(get_row_taxpath, axis=1, args=(taxo, ranks, taxid_col))
+
+    # find filename from accession and taxid
+    # this finds the ones downloaded with the accessions
+    queryDF = queryDF.apply(find_filename, axis=1, args=(args.genome_dir, args.identifier_column, args.full_paths))
+    # todo: go search the taxid folder for the genomes downloaded from taxid
+    # write a csv of domains for charcoal. ( glob filename, output filename, charcoal_lineage
+
+
     # write full csv
     queryDF.to_csv(args.output_csv, index=False)
 
@@ -125,8 +150,11 @@ if __name__ == "__main__":
     p.add_argument("query_csv")
     p.add_argument("--output-csv")
     p.add_argument("--taxdump_dir", default="ncbi_taxonomy")
+    p.add_argument("--genome_dir", default="orthodb/species_genomes")
+    p.add_argument("--full_paths", action="store_true")
     p.add_argument("--ranks", default="superkingdom|phylum|class|order|family|genus|species|strain")
-    p.add_argument("--identifier-column", default="ncbi-taxid", help="column in query_csv that can be used to identify corresponding filename")
+    p.add_argument("--taxid-column", default="ncbi-taxid", help="ncbi taxid column")
+    p.add_argument("--identifier-column", default="genome-accession", help="column in query_csv that can be used to identify corresponding filename")
     args = p.parse_args()
     if not args.output_csv:
         args.output_csv=(args.query_csv).rsplit(".", 1)[0] + ".lineage.csv"
