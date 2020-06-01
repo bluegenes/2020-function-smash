@@ -68,8 +68,11 @@ no_gc_accession.to_csv("odb10v1_species.no_ncbi_download.csv", index=False)
 
 rule all:
     input: 
-        expand("orthodb/species_genomes/{genome}.fna.gz", genome = downloadable_accessions),
-        expand("orthodb/taxid_genomes/{taxid}.{ext}", taxid = taxid2sciname.keys(), ext=["zip", "info.json", "accessions.txt"])
+        expand("orthodb/orthodb_downloads_acc/{genome}.zip", genome = downloadable_accessions),
+        #expand("orthodb/species_genomes/{genome}_genomic.fna.gz", genome = downloadable_accessions),
+        #expand("orthodb/species_transcriptomes/{genome}_rna.fna.gz", genome = downloadable_accessions),
+        #expand("orthodb/species_proteomes/{genome}_protein.faa.gz", genome = downloadable_accessions),
+        expand("orthodb/orthodb_downloads_taxid/{taxid}.{ext}", taxid = taxid2sciname.keys(), ext=["zip", "info.json", "accessions.txt"])
 
 
 #alternate tool (cheers tereiter):
@@ -86,9 +89,9 @@ rule download_ncbi_datasets_tool:
 rule download_all_taxid:
     input: "scripts/ncbi-datasets"
     output: 
-        info="orthodb/taxid_genomes/{taxid}.info.json",
-        accession_info="orthodb/taxid_genomes/{taxid}.accessions.txt",
-        zipfile="orthodb/taxid_genomes/{taxid}.zip"
+        info="orthodb/orthodb_downloads_taxid/{taxid}.info.json",
+        accession_info="orthodb/orthodb_downloads_taxid/{taxid}.accessions.txt",
+        zipfile="orthodb/orthodb_downloads_taxid/{taxid}.zip"
     threads: 1
     resources:
         mem_mb= 2000,
@@ -97,25 +100,58 @@ rule download_all_taxid:
         """
         scripts/ncbi-datasets assembly-descriptors tax-id {wildcards.taxid} --limit ALL > {output.info}
         scripts/ncbi-datasets assembly-descriptors tax-id {wildcards.taxid} --limit ALL | jq '.datasets[].assembly_accession' -r > {output.accession_info}
-        scripts/ncbi-datasets download assembly tax-id {wildcards.taxid} -f {output.zipfile}
+        scripts/ncbi-datasets download assembly tax-id {wildcards.taxid} --include-protein --include-rna --include-gff3 -f {output.zipfile}
         """
 
 rule ncbi_datasets_download:
     input: "scripts/ncbi-datasets"
-    output: "orthodb/species_genomes/{genome}.zip"
+    output: "orthodb/orthodb_downloads_acc/{genome}.zip"
     threads: 1
     resources:
         mem_mb= 2000,
         runtime= 60
     shell:
         """
-        scripts/ncbi-datasets download assembly {wildcards.genome} -f {output}
+        scripts/ncbi-datasets download assembly {wildcards.genome} --include-protein --include-rna --include-gff3 -f {output}
         """
 
 
 rule unzip_genomes:
-    input: "orthodb/species_genomes/{genome}.zip"
-    output: "orthodb/species_genomes/{genome}.fna.gz"
+    input: "orthodb/orthodb_downloads_acc/{genome}.zip"
+    output: "orthodb/species_genomes/{genome}_genomic.fna.gz"
+    resources:
+        mem_mb= 3000,
+        runtime= 60
+    shell:
+        """
+        unzip -p {input} ncbi_dataset/data/{wildcards.genome}/*genomic.fna | gzip -9 > {output}
+        """
+
+rule unzip_proteomes:
+    input: "orthodb/orthodb_downloads_acc/{genome}.zip"
+    output: "orthodb/species_proteomes/{genome}_protein.faa.gz"
+    resources:
+        mem_mb= 3000,
+        runtime= 60
+    shell:
+        """
+        unzip -p {input} ncbi_dataset/data/{wildcards.genome}/*.faa | gzip -9 > {output}
+        """
+
+rule unzip_rna:
+    input: "orthodb/orthodb_downloads_acc/{genome}.zip"
+    output: "orthodb/species_transcriptomes/{genome}_rna.fna.gz"
+    resources:
+        mem_mb= 3000,
+        runtime= 60
+    shell:
+        """
+        unzip -p {input} ncbi_dataset/data/{wildcards.genome}/*rna.fna | gzip -9 > {output}
+        """
+
+rule unzip_taxid:
+    input: "orthodb/orthodb_downloads_taxid/{taxid}.zip"
+    output: "orthodb/taxid_genomes/{taxid}.fna.gz"
     resources:
         mem_mb= 3000,
         runtime= 60

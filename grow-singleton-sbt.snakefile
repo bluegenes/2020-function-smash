@@ -32,7 +32,7 @@ rule grow_singleton_sbt:
         alpha= lambda w: w.alphabet.rsplit("translate_")[1] if w.alphabet.startswith("translate") else w.alphabet, # remove translate
         translate = lambda w: " --translate " if w.alphabet.startswith("translate") else "",
     resources:
-        mem_mb=lambda wildcards, attempt: attempt *15000,
+        mem_mb=lambda wildcards, attempt: attempt *100000,
         runtime=60000,
     log: os.path.join(logs_dir, "grow-sbt", "{database}.{alphabet}_scaled{scaled}_k{k}.grow-singleton.log")
     benchmark: os.path.join(logs_dir, "grow-sbt", "{database}.{alphabet}_scaled{scaled}_k{k}.grow-singleton.benchmark")
