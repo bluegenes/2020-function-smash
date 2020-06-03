@@ -33,7 +33,7 @@ checkpoint split_fasta:
         directory(os.path.join(out_dir, "{sample}_fastasplit")),
     params:
         prefix=lambda w: w.sample,
-        contigs_per_file=1000, # ~40 million reads in orthodb --> will create 40k files
+        contigs_per_file=5000, # ~40 million reads in orthodb --> will create 8k files
     threads: 1
     resources:
         mem_mb=lambda wildcards, attempt: attempt *5000,
@@ -58,6 +58,7 @@ rule sourmash_compute_dna:
         compute_moltypes= lambda w: moltype_map[w.alphabet],
         input_is_protein=False,
         track_abundance=True,
+        singleton=True,
     threads: 1
     resources:
         mem_mb=lambda wildcards, attempt: attempt *2000,
@@ -76,6 +77,7 @@ rule sourmash_compute_protein:
         compute_moltypes= lambda w: moltype_map[w.alphabet],
         input_is_protein=True,
         track_abundance=True,
+        singleton=True,
     threads: 1
     resources:
         mem_mb=lambda wildcards, attempt: attempt *2000,
@@ -94,6 +96,7 @@ rule sourmash_compute_rna:
         compute_moltypes= lambda w: moltype_map[w.alphabet],
         input_is_protein=False,
         track_abundance=True,
+        singleton=True,
     threads: 1
     resources:
         mem_mb=lambda wildcards, attempt: attempt *2000,
@@ -141,6 +144,6 @@ rule grow_singleton_sbt:
     conda: "envs/sbt-env.yml"
     shell:
         """
-        python scripts/grow-sbtmh.py {compute_dir}/{params.input_type}/*_{params.alpha}_scaled{wildcards.scaled}_k{wildcards.k}.sig \
+        python scripts/grow-sbtmh.py {compute_dir}/{wildcards.sample}.{params.input_type}/*_{params.alpha}_scaled{wildcards.scaled}_k{wildcards.k}.sig \
         --sbt {output.sbt} --ksize {wildcards.k} --scaled {wildcards.scaled} --alphabet {params.alpha} --singleton {params.translate} 2> {log}
         """

@@ -102,7 +102,7 @@ def get_row_taxpath(row, taxo, ranks, taxid_col="ncbi-taxid"):
     row["lineage"] = ",".join(sourmash.lca.zip_lineage(final_lineage,include_strain=True,truncate_empty=True))
     return row
 
-def find_filename(row, glob_dir, glob_col, second_col, full_paths=False):
+def find_filename(row, glob_dir, glob_col, full_paths=False):
     identifier = row[glob_col]
     filepattern = os.path.join(glob_dir, f"*{identifier}*")
     found_files = glob.glob(filepattern)
@@ -134,13 +134,25 @@ def main(args):
     # find lineage from taxid
     queryDF = queryDF.apply(get_row_taxpath, axis=1, args=(taxo, ranks, taxid_col))
 
-    # find filename from accession and taxid
-    # this finds the ones downloaded with the accessions
+    # find filenames for genomes downloaded by accessions
     queryDF = queryDF.apply(find_filename, axis=1, args=(args.genome_dir, args.identifier_column, args.full_paths))
-    # todo: go search the taxid folder for the genomes downloaded from taxid
+
+    # TO DO: find filename from accession and taxid --> this requires a bit more manipulation. Ignore these for now.
+    # search the taxid folder for the genomes downloaded from taxid
+    #queryDF = queryDF.apply(find_filename, axis=1, args=(args.genome_dir, args.identifier_column, full_paths=args.full_paths))
+
+
     # write a csv of domains for charcoal. ( glob filename, output filename, charcoal_lineage
-
-
+    if args.charcoal_csv:
+        charcoal_csv = args.charcoal_csv
+        charcoal_genomes = charcoal_csv.rsplit(".csv")[0] + ".genomes.txt"
+        charcoalDF = queryDF[["filename", "charcoal_lineage"]]
+        # hmm. I added "" for empty filenames - maybe should make in NA so can drop like this instead
+        #charcoalDF = charcoalDF.dropna(subset=['filename'], inplace=True) # just drop NAs for now (taxid issues, downloads, etc)
+        charcoalDF = charcoalDF[charcoalDF["filename"] != ""]
+        charcoalDF["filename"].to_csv(charcoal_genomes, index=False, header=False)
+        charcoalDF = charcoalDF[charcoalDF["charcoal_lineage"] == "d__Eukaryota"] # what about viruses?
+        charcoalDF.to_csv(args.charcoal_csv, index=False, header=False)
     # write full csv
     queryDF.to_csv(args.output_csv, index=False)
 
@@ -149,9 +161,10 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("query_csv")
     p.add_argument("--output-csv")
+    p.add_argument("--charcoal-csv")
     p.add_argument("--taxdump_dir", default="ncbi_taxonomy")
     p.add_argument("--genome_dir", default="orthodb/species_genomes")
-    p.add_argument("--full_paths", action="store_true")
+    p.add_argument("--full-paths", action="store_true")
     p.add_argument("--ranks", default="superkingdom|phylum|class|order|family|genus|species|strain")
     p.add_argument("--taxid-column", default="ncbi-taxid", help="ncbi taxid column")
     p.add_argument("--identifier-column", default="genome-accession", help="column in query_csv that can be used to identify corresponding filename")

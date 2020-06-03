@@ -56,7 +56,7 @@ def determine_appropriate_fresh_minhash(alphabet, ksize, scaled_val, ignore_abun
     if alphabet == "nucleotide":
         mh = sourmash.MinHash(ksize=ksize, n=0, scaled=scaled_val, track_abundance=abund, is_protein=False)
     elif alphabet == "protein":
-        k=ksize*3 ## need to multiply bt 3 to get same ksize, bc add_protein method does k/3!!!!!!!!!!!!!!
+        k=ksize*3 ## need to multiply bt 3 to get same ksize, bc add_protein method does k/3
         mh = sourmash.MinHash(ksize=k, n=0, scaled=scaled_val, track_abundance=abund, is_protein=True, dayhoff=False, hp=False)
     elif alphabet == "dayhoff":
         k=ksize*3
@@ -69,6 +69,7 @@ def determine_appropriate_fresh_minhash(alphabet, ksize, scaled_val, ignore_abun
 def load_or_generate_sig_from_file(input_file, alphabet, ksize, scaled, ignore_abundance=False, translate=False):
     sig=""
     if input_file.endswith(".sig"):
+        # do I want to enable multiple sigs per file here?
         sig = sourmash.load_one_signature(input_file, ksize=ksize)
     else:
         # read file and add sigs
@@ -91,6 +92,10 @@ def add_singleton_sigs(sbt, input_file, ksize, scaled, alphabet, ignore_abundanc
     if input_file.endswith(".sig"):
         # maybe this? haven't tested!!
         sigs = sourmash.signature.load_signatures(input_file, ksize=ksize, select_moltype=alphabet)
+        for sig in sigs:
+            if sig.minhash:
+                leaf = SigLeaf(sig.md5sum(), sig)
+                sbt.add_node(leaf)
         # loop through and add each to sbt
     else:
         # read file and add sigs
@@ -146,6 +151,12 @@ def grow_singleton_sbt(args):
     if args.input_is_directory:
         input_files = collect_input_files_from_dir(input_files[0], args.subset_csv, args.subset_info_colname)
 
+    # protein ksize acrobatics
+    ksize = args.ksize
+    alphabet = args.alphabet
+    if alphabet == "protein" or alphabet == "dayhoff" or alphabet == "hp":
+        ksize = ksize*3
+
     # load or create sbt
     sbt = create_sbt_or_load_existing(args.sbt, args.load_existing_sbt)
 
@@ -154,7 +165,7 @@ def grow_singleton_sbt(args):
         # swipe some handy progress reporting code from titus:
         #if n % 100 == 0:
         sys.stderr.write(f"... loading {filename} file {n} of {len(input_files)}\n")
-        sbt = add_singleton_sigs(sbt, filename, args.ksize, args.scaled, args.alphabet, args.ignore_abundance, args.translate)
+        sbt = add_singleton_sigs(sbt, filename, ksize, args.scaled, args.alphabet, args.ignore_abundance, args.translate)
 
     # save the tree
     sbt.save(args.sbt)
@@ -164,7 +175,10 @@ def grow_sbt(args):
     input_files = args.input_files
     if args.input_is_directory:
         input_files = collect_input_files_from_dir(input_files[0], args.subset_csv, args.subset_info_colname)
-
+    ksize = args.ksize
+    alphabet = args.alphabet
+    if alphabet == "protein" or alphabet == "dayhoff" or alphabet == "hp":
+        ksize = ksize*3
     # create or load sbt
     sbt = create_sbt_or_load_existing(args.sbt, args.load_existing_sbt)
     # iterate through input files; add to sbt
@@ -174,7 +188,8 @@ def grow_sbt(args):
             sys.stderr.write(f"... loading {filename} file {n} of {len(input_files)}\n")
 
         # build or load signature from file
-        sig = load_or_generate_sig_from_file(filename, args.alphabet, args.ksize, args.scaled, args.ignore_abundance, args.translate)
+
+        sig = load_or_generate_sig_from_file(filename, alphabet, ksize, args.scaled, args.ignore_abundance, args.translate)
         # add to sbt
         if sig: # is this necessary?
             if sig.minhash:
