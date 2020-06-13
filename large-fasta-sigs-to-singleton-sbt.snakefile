@@ -19,7 +19,9 @@ sampleInfo=config["databases"]
 
 for sample, info in sampleInfo.items():    
     for alpha, alphainfo in info["alphabet"].items():
-        index_targets+=expand(os.path.join(index_dir,"{sample}.{alphabet}_scaled{scaled}_k{k}.singleton.sbt.zip"), sample=sample, alphabet=alpha, scaled=alphainfo["scaled"], k=alphainfo["ksizes"])
+        #index_targets+=expand(os.path.join(index_dir,"{sample}.{alphabet}_scaled{scaled}_k{k}.singleton.sbt.zip"), sample=sample, alphabet=alpha, scaled=alphainfo["scaled"], k=alphainfo["ksizes"])
+        #try indexing using sourmash index instead of grow-sbtmh... probably much faster!
+        index_targets+=expand(os.path.join(index_dir,"{sample}.{alphabet}_scaled{scaled}_k{k}.singleton.index.sbt.zip"), sample=sample, alphabet=alpha, scaled=alphainfo["scaled"], k=alphainfo["ksizes"])
 
 rule all:
     input: index_targets
@@ -61,7 +63,7 @@ rule sourmash_compute_dna:
         singleton=True,
     threads: 1
     resources:
-        mem_mb=lambda wildcards, attempt: attempt *2000,
+        mem_mb=lambda wildcards, attempt: attempt *1000,
         runtime=1200,
     log: os.path.join(logs_dir, "sourmash", "{sample}.dna", "{sample}_{tnum}_{alphabet}_scaled{scaled}_k{k}.dna.compute.log")
     benchmark: os.path.join(logs_dir, "sourmash", "{sample}.dna", "{sample}_{tnum}_{alphabet}_scaled{scaled}_k{k}.dna.compute.benchmark")
@@ -80,7 +82,7 @@ rule sourmash_compute_protein:
         singleton=True,
     threads: 1
     resources:
-        mem_mb=lambda wildcards, attempt: attempt *2000,
+        mem_mb=lambda wildcards, attempt: attempt *1000,
         runtime=1200,
     log: os.path.join(logs_dir, "sourmash", "{sample}.protein", "{sample}_{tnum}_{alphabet}_scaled{scaled}_k{k}.protein.compute.log")
     benchmark: os.path.join(logs_dir, "sourmash", "{sample}.protein", "{sample}_{tnum}_{alphabet}_scaled{scaled}_k{k}.protein.compute.benchmark")
@@ -99,7 +101,7 @@ rule sourmash_compute_rna:
         singleton=True,
     threads: 1
     resources:
-        mem_mb=lambda wildcards, attempt: attempt *2000,
+        mem_mb=lambda wildcards, attempt: attempt *1000,
         runtime=1200,
     log: os.path.join(logs_dir, "sourmash", "{sample}.rna", "{sample}_{tnum}_{alphabet}_scaled{scaled}_k{k}.rna.compute.log")
     benchmark: os.path.join(logs_dir, "sourmash", "{sample}.rna", "{sample}_{tnum}_{alphabet}_scaled{scaled}_k{k}.rna.compute.benchmark")
@@ -137,8 +139,8 @@ rule grow_singleton_sbt:
         input_type = lambda w: sampleInfo[w.sample]["input_type"],
         ksize = lambda w: (int(w.k) * ksize_multiplier[w.alphabet]),
     resources:
-        mem_mb=lambda wildcards, attempt: attempt *50000,
-        runtime=6000,
+        mem_mb=lambda wildcards, attempt: attempt *40000,
+        runtime=600000,
     log: os.path.join(logs_dir, "grow-singleton-sbt", "{sample}.{alphabet}_scaled{scaled}_k{k}.grow.log")
     benchmark: os.path.join(logs_dir, "grow-singleton-sbt", "{sample}.{alphabet}_scaled{scaled}_k{k}.grow.benchmark")
     conda: "envs/sbt-env.yml"
@@ -146,4 +148,26 @@ rule grow_singleton_sbt:
         """
         python scripts/grow-sbtmh.py {compute_dir}/{wildcards.sample}.{params.input_type}/*_{params.alpha}_scaled{wildcards.scaled}_k{wildcards.k}.sig \
         --sbt {output.sbt} --ksize {wildcards.k} --scaled {wildcards.scaled} --alphabet {params.alpha} --singleton {params.translate} 2> {log}
+        """
+rule index_singleton_sbt:
+    input: aggregate_sigs,
+    output:
+        sbt=os.path.join(index_dir,"{sample}.{alphabet}_scaled{scaled}_k{k}.singleton.index.sbt.zip"),
+    threads: 1
+    params:
+        alpha= lambda w: (w.alphabet.rsplit("translate_")[1] if w.alphabet.startswith("translate") else w.alphabet), # remove translate
+        alpha_cmd= lambda w: " --" + (w.alphabet.rsplit("translate_")[1] if w.alphabet.startswith("translate") else w.alphabet), # remove translate
+        translate = lambda w: " --translate " if w.alphabet.startswith("translate") else "",
+        input_type = lambda w: sampleInfo[w.sample]["input_type"],
+        ksize = lambda w: (int(w.k) * ksize_multiplier[w.alphabet]),
+    resources:
+        mem_mb=lambda wildcards, attempt: attempt *200000,
+        runtime=600000,
+    log: os.path.join(logs_dir, "grow-singleton-sbt", "{sample}.{alphabet}_scaled{scaled}_k{k}.grow.log")
+    benchmark: os.path.join(logs_dir, "grow-singleton-sbt", "{sample}.{alphabet}_scaled{scaled}_k{k}.grow.benchmark")
+    conda: "envs/sourmash3.3.yml"
+    shell:
+        """
+        sourmash index --ksize {params.ksize} --scaled {wildcards.scaled} {params.alpha_cmd}  \
+        {output.sbt} {compute_dir}/{wildcards.sample}.{params.input_type}/*_{params.alpha}_scaled{wildcards.scaled}_k{wildcards.k}.sig  2> {log}
         """
