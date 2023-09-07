@@ -1,0 +1,9 @@
+name: 2021-function-smash
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.8
+  - snakemake=6.9.1
+  - pandas>=1.2.4

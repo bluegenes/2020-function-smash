@@ -1,0 +1,18 @@
+
+out_dir: index-by-orthogroup
+
+databases:
+  orthodb:
+    input_type: protein
+    input_fasta: /home/ntpierce/2020-function-smash/orthodb/odb10v1_all_fasta.tab.gz
+    orthogroup-2-genes: /home/ntpierce/2020-function-smash/orthodb/odb10v1_OG2genes.tab
+    alphabet:
+      protein:
+        ksizes: [11] #[7] #[5,7,9,11,13] #[5,7,9,11]
+        scaled: [100] #50
+      #dayhoff:
+      #  ksizes: [19] #[13,15,17,19,21,23,25] #[11,12,13,15] #[9,11,13,15]
+      #  scaled: [100] #50
+      #hp:
+      #  ksizes: [25] #27,29,31,33] #[21,23,25,27,29,31,33]
+      #  scaled: [100] #50

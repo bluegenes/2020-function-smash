@@ -99,7 +99,7 @@ def get_row_taxpath(row, taxo, ranks, taxid_col="ncbi-taxid"):
             final_lineage.append(lp)
 
     row["taxpath"] = "|".join(final_taxpath)
-    row["lineage"] = ",".join(sourmash.lca.zip_lineage(final_lineage,include_strain=True,truncate_empty=True))
+    row["lineage"] = ";".join(sourmash.lca.zip_lineage(final_lineage,include_strain=True,truncate_empty=True))
     return row
 
 def find_filename(row, glob_dir, glob_col, full_paths=False):

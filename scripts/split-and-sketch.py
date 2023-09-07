@@ -12,7 +12,10 @@ og2genes = str(snakemake.input.og2genes)
 default_prefix = os.path.basename(fasta).rsplit('.fa',1)[0]
 
 prefix = snakemake.params.get("prefix", default_prefix)
-output_dirname = str(snakemake.output)
+
+##### fix these
+output_dirname = str(snakemake.output.fastadir)
+sketch_dirname = str(snakemake.output.sketchdir)
 
 if not os.path.exists(output_dirname):
     try:
@@ -57,5 +60,9 @@ with open(log, "w") as out_log:
         with open(outfile, "w") as out:
             for record in og_records:
                 out.write(f">{record.name}\n{record.sequence}\n")
+
+        # now sketch this file
+        #sketchfile = os.path.join(sketch_dirname, f"{prefix}.{orthogroup}.sig")
+
 
     out_log.write(f"{str(n)} contigs written to {str(filenum)} individual orthogroup fasta files\n")

@@ -4,6 +4,6 @@
 
 
 # full
-python scripts/get_lineage_from_taxid.py odb10v1_species.all.csv --output-csv odb10v1_species.all.lineage.csv --charcoal-csv odb10v1_species.all.charcoal.csv
+python scripts/get_lineage_from_taxid.py odb10v1_species.all.csv --output-csv odb10v1_species.all.ncbi-lineage.tsv --charcoal-csv odb10v1_species.all.charcoal.csv
 
 

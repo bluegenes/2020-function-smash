@@ -29,16 +29,14 @@ rule all:
 localrules: split_by_orthogroup
 
 checkpoint split_by_orthogroup:
-    input: 
-        fasta=lambda w: sampleInfo[w.sample]["input_fasta"],
-        og2genes= lambda w: sampleInfo[w.sample]["orthogroup-2-genes"]
+    input: lambda w: sampleInfo[w.sample]["input_fasta"]
     output:
         directory(os.path.join(out_dir, "{sample}_split")),
     params:
         prefix=lambda w: w.sample,
     threads: 1
     resources:
-        mem_mb=lambda wildcards, attempt: attempt *10000,
+        mem_mb=lambda wildcards, attempt: attempt *5000,
         runtime=1200,
     log: os.path.join(logs_dir, "split_by_orthogroup", "{sample}_split.log")
     benchmark: os.path.join(logs_dir, "split_by_orthogroup", "{sample}_split.benchmark")
@@ -141,7 +139,7 @@ rule index_sbt:
         runtime=600000,
     log: os.path.join(logs_dir, "index", "{sample}.{alphabet}_scaled{scaled}_k{k}.orthogroup.sbt.log")
     benchmark: os.path.join(logs_dir, "index", "{sample}.{alphabet}_scaled{scaled}_k{k}.orthogroup.sbt.benchmark")
-    conda: "envs/sourmash3.4.yml"
+    conda: "envs/sourmash3.3.yml"
     shell:
         """
         sourmash index --ksize {params.ksize} --scaled {wildcards.scaled} {params.alpha_cmd}  \

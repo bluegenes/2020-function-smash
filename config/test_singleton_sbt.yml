@@ -1,0 +1,17 @@
+
+out_dir: singleton_sbts 
+
+databases:
+  orthodb_test:
+    input_files: 
+      - /home/ntpierce/2020-function-smash/test_data/odb_all_head400.fa
+    alphabet:
+      protein:
+        ksizes: [5,7,9,11,13] #[5,7,9,11]
+        scaled: [1]
+      dayhoff:
+        ksizes: [19] #[13,15,17,19,21,23,25] #[11,12,13,15] #[9,11,13,15]
+        scaled: [1]
+      hp:
+        ksizes: [21,23,25,27,29,31,33]
+        scaled: [1]

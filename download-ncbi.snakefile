@@ -69,9 +69,9 @@ no_gc_accession.to_csv("odb10v1_species.no_ncbi_download.csv", index=False)
 rule all:
     input: 
         expand("orthodb/orthodb_downloads_acc/{genome}.zip", genome = downloadable_accessions),
-        #expand("orthodb/species_genomes/{genome}_genomic.fna.gz", genome = downloadable_accessions),
-        #expand("orthodb/species_transcriptomes/{genome}_rna.fna.gz", genome = downloadable_accessions),
-        #expand("orthodb/species_proteomes/{genome}_protein.faa.gz", genome = downloadable_accessions),
+        expand("orthodb/species_genomes/{genome}_genomic.fna.gz", genome = downloadable_accessions),
+        expand("orthodb/species_transcriptomes/{genome}_rna.fna.gz", genome = downloadable_accessions),
+        expand("orthodb/species_proteomes/{genome}_protein.faa.gz", genome = downloadable_accessions),
         expand("orthodb/orthodb_downloads_taxid/{taxid}.{ext}", taxid = taxid2sciname.keys(), ext=["zip", "info.json", "accessions.txt"])
 
 

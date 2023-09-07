@@ -2,10 +2,18 @@
 __default__:
     account: ctbrowngrp
     partition: bmm
-    mail-type: FAIL,TIME_LIMIT
-    #mail-user: ntpierce@ucdavis.edu
-    nodes: 1
-    ntasks-per-node: 1
     job-name: "{rule}.w{wildcards}"
-    chdir: "/home/ntpierce/2020-function-smash"
     logdir: "/home/ntpierce/2020-function-smash/slurm-logs"
+
+sourmash_sketch:
+    account: ctbrowngrp
+    partition: low2
+    job-name: "{rule}.w{wildcards}"
+    logdir: "/home/ntpierce/2020-function-smash/slurm-logs/"
+
+sourmash_sketch_chunks:
+    account: ctbrowngrp
+    partition: low2
+    job-name: "{rule}.w{wildcards}"
+    logdir: "/home/ntpierce/2020-function-smash/slurm-logs/"
+
